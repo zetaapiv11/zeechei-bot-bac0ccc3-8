@@ -25,9 +25,15 @@ async function initPoruMusic(client) {
     return null;
   }
 
+  console.log(
+    "[LEO Music] Lavalink nodes:",
+    nodes.map(n => `${n.secure ? "wss" : "ws"}://${n.host}:${n.port}`).join(", ")
+  );
+
   const poru = new Poru(client, nodes, {
     library: "discord.js",
     defaultPlatform: "ytsearch",
+    restVersion: "v4",
     resumeKey: "ZeecheiLEOMusic",
     resumeTimeout: 60,
     reconnectTimeout: 10000,

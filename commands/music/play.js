@@ -123,7 +123,9 @@ module.exports = {
                 components: [errorBox(
                     String(err?.message || "").includes("502")
                         ? "Music server is temporarily unavailable. Try again in a few seconds."
-                        : "Music search failed. Please try again."
+                        : /no nodes|not connected|unavailable|ECONN|ENOTFOUND|timeout/i.test(String(err?.message || ""))
+                            ? "Music server (Lavalink) is not connected. Check the Lavalink settings or try another node."
+                            : "Music search failed. Please try again."
                 )],
                 flags: MessageFlags.IsComponentsV2
             });

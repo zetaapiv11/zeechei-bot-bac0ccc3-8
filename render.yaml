@@ -1,0 +1,25 @@
+services:
+  - type: web            # ganti ke "worker" kalau pakai paket berbayar (tidak butuh port)
+    name: zeechei-bot
+    runtime: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: DISCORD_TOKEN
+        sync: false      # diisi manual di dashboard Render
+      - key: WEBHOOK_URL
+        sync: false
+      - key: OWNER_ID
+        value: "1443804231776862228"
+      - key: LAVALINK_HOST
+        sync: false
+      - key: LAVALINK_PORT
+        value: "443"
+      - key: LAVALINK_PASSWORD
+        sync: false
+      - key: LAVALINK_SECURE
+        value: auto
+      - key: PREFIX
+        value: ",,"
+      - key: NODE_VERSION
+        value: "20"

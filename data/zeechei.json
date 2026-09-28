@@ -1,0 +1,35 @@
+{
+  "noprefix": [],
+  "blacklist": [],
+  "timedBlacklist": {},
+  "premium": {},
+  "guildSettings": {},
+  "playlists": {},
+  "warnings": {},
+  "embedColors": {},
+  "mode247": {},
+  "sources": {},
+  "commandsUsed": 0,
+  "cmdStats": {
+    "global": {},
+    "guild": {},
+    "daily": {}
+  },
+  "musicWL": {},
+  "musicDisabled": {},
+  "afk": {
+    "global": {},
+    "server": {}
+  },
+  "afkPings": {},
+  "spotify": {},
+  "profiles": {},
+  "afkCounts": {},
+  "songPlays": {},
+  "customBadges": {},
+  "antiNuke": {},
+  "owners": [],
+  "mainOwnerId": "1443804231776862228",
+  "developers": {},
+  "userStats": {}
+}

@@ -1,0 +1,35 @@
+Zeechei Lavalink SSL / non-SSL support
+====================================
+
+The Lavalink connection code now accepts both TLS/SSL and plain Lavalink nodes.
+
+1) Plain Lavalink
+   LAVALINK_HOST=node.example.com
+   LAVALINK_PORT=2333
+   LAVALINK_PASSWORD=your-password
+   LAVALINK_SECURE=false
+
+2) SSL Lavalink
+   LAVALINK_HOST=node.example.com
+   LAVALINK_PORT=443
+   LAVALINK_PASSWORD=your-password
+   LAVALINK_SECURE=true
+
+3) Automatic mode (recommended when the URL/port tells us the protocol)
+   LAVALINK_HOST=node.example.com
+   LAVALINK_PORT=443
+   LAVALINK_PASSWORD=your-password
+   LAVALINK_SECURE=auto
+
+4) Put the protocol directly in the host
+   wss://node.example.com -> secure websocket
+   ws://node.example.com  -> plain websocket
+   https://node.example.com -> secure
+   http://node.example.com  -> plain
+
+The protocol in the host takes priority over the secure setting.
+
+Optional multiple nodes:
+   LAVALINK_NODES=wss://node1.example.com:443|password1;ws://node2.example.com:2333|password2
+
+Do not put spaces around the semicolon-separated entries.

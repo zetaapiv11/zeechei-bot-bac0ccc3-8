@@ -1,0 +1,13 @@
+{
+  "global": {
+    "title": "Zeechei Music",
+    "tagline": "High-end music experience",
+    "description": "A powerful Discord music experience.",
+    "accent": "#8b7cff",
+    "footer": "Developed by Zeechei",
+    "website": "",
+    "support": "https://discord.gg/d4RDX4KXc",
+    "status": "online",
+    "activity": "Music"
+  }
+}

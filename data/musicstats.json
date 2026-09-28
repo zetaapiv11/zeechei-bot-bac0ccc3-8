@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "global": {
+    "plays": 0,
+    "searches": 0,
+    "skips": 0,
+    "pauses": 0,
+    "resumes": 0,
+    "sessions": 0,
+    "commands": 0,
+    "requests": 0,
+    "errors": 0,
+    "listeners": 0,
+    "uptimeSeconds": 0,
+    "musicSeconds": 0
+  },
+  "servers": {}
+}

@@ -1,0 +1,39 @@
+ZEECHEI VOICEMASTER - DARK CLEAN EDITION
+
+Files included:
+commands/voice/voicemaster.js
+utils/VoiceMaster.js
+utils/VoiceMasterInteractions.js
+events/voiceStateUpdate.js
+events/interactionCreate.js
+
+Install:
+1. Copy the included files into the matching folders in Zeechei.
+2. Restart Zeechei.
+3. Run +voicemaster setup in a server where Zeechei has Manage Channels.
+4. Run +voicemaster buttons in the channel where you want the clean interface.
+5. Users join the generated "Join to Create" voice channel.
+
+Prefix commands:
++voicemaster
++voicemaster setup
++voicemaster buttons
++voicemaster config
++voicemaster reset
++voicemaster lock
++voicemaster unlock
++voicemaster hide
++voicemaster reveal
++voicemaster rename <name>
++voicemaster limit <0-99>
++voicemaster mute @user
++voicemaster unmute @user
++voicemaster deafen @user
++voicemaster undeafen @user
++voicemaster permit @user
++voicemaster ban @user
++voicemaster transfer @user
++voicemaster claim
+
+The interface contains text-only buttons. No custom emoji is used by the VoiceMaster system.
+The system stores its configuration in data/voicemaster.json automatically.

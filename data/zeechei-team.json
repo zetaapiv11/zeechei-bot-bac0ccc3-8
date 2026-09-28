@@ -1,0 +1,22 @@
+{
+  "owner": [
+    "1443804231776862228"
+  ],
+  "coowner": [],
+  "admin": [],
+  "manager": [],
+  "staff": [],
+  "vip": [],
+  "premium": [],
+  "guest": [],
+  "mainOwnerId": "1443804231776862228",
+  "members": {
+    "1443804231776862228": {
+      "role": "owner",
+      "addedBy": "1443804231776862228",
+      "addedAt": 0,
+      "enabled": true
+    }
+  },
+  "profiles": {}
+}

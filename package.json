@@ -1,11 +1,23 @@
 {
-  "name": "discord-bot-zeechei-bot",
+  "name": "@workspace/zeechei-bot",
   "version": "1.0.0",
+  "description": "Zeechei Discord Music Bot",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node shard.js",
+    "dev": "node index.js"
   },
   "dependencies": {
-    "discord.js": "^14.16.3"
+    "@napi-rs/canvas": "^0.1.100",
+    "discord.js": "^14.17.3",
+    "lavalink-client": "^2.3.8",
+    "undici": "^6.21.0",
+    "poru": "^5.3.0",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7",
+    "genius-lyrics": "^4.4.7"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

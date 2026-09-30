@@ -1,7 +1,7 @@
 const emojis = require('./emojis');
 
 const parseEmoji = (str) => {
-    if (!str) return null;
+    if (typeof str !== "string" || !str.trim()) return null;
     const match = str.trim().match(/^<(a)?:(\w+):(\d+)>$/);
     if (!match) return null;
     return { animated: !!match[1], name: match[2], id: match[3] };

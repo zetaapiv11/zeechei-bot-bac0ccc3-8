@@ -12,7 +12,7 @@ function loadCommands(client) {
     const catPath = path.join(categoriesPath, cat);
     if (!fs.statSync(catPath).isDirectory()) continue;
 
-    const files = fs.readdirSync(catPath).filter(f => f.endsWith(".js"));
+    const files = fs.readdirSync(catPath).filter(f => f.endsWith(".js") && !(cat === "settings" && f === "Shards.js"));
     for (const file of files) {
       try {
         const cmd = require(path.join(catPath, file));

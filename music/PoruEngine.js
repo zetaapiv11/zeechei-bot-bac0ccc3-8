@@ -4,10 +4,18 @@ const setupMusicEvents = require("./leoEvents").setupMusicEvents;
 const setupApplicationEmojis = require("../utils/setupApplicationEmojis");
 const { getLavalinkNodes } = require("../utils/lavalinkConfig");
 
-let initialized = false;
+const initializing = new WeakMap();
 
-async function initPoruMusic(client) {
-  if (initialized && client.poru) return client.poru;
+function initPoruMusic(client) {
+  if (initializing.has(client)) return initializing.get(client);
+  if (client.poru) return Promise.resolve(client.poru);
+  const pending = startPoruMusic(client);
+  initializing.set(client, pending);
+  void pending.finally(() => initializing.delete(client)).catch(() => {});
+  return pending;
+}
+
+async function startPoruMusic(client) {
 
   // Isolated DB for LEO/Zeechei music features. Zeechei's existing database is untouched.
   require("./database/models");
@@ -34,8 +42,9 @@ async function initPoruMusic(client) {
     library: "discord.js",
     defaultPlatform: "ytsearch",
     restVersion: "v4",
-    resumeKey: "ZeecheiLEOMusic",
-    resumeTimeout: 60,
+    // Poru 5 sends the obsolete resumingKey payload when resumeKey is set.
+    // Reconnect opens a fresh Lavalink v4 session; active playback is not resumed.
+    autoResume: false,
     reconnectTimeout: 10000,
     reconnectTries: 5,
   });
@@ -59,10 +68,11 @@ async function initPoruMusic(client) {
 
   // Register the LEO emoji set as application emojis when Discord allows it.
   // The static emoji strings remain as a fallback if registration is unavailable.
-  await setupApplicationEmojis(client);
-
-  poru.init(client.user.id);
-  initialized = true;
+  await poru.init();
+  // Emoji registration must not delay the audio WebSocket.
+  void setupApplicationEmojis(client).catch(() =>
+    console.warn("[AppEmoji] Registration unavailable; using existing emojis.")
+  );
 
   console.log("[LEO Music] Poru music engine initialized.");
   return poru;

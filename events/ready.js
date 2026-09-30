@@ -4,12 +4,10 @@ const {
   Routes,
 } = require("discord.js");
 
-const { createManager } = require("../music/MusicManager");
+const { selectSlashCommands } = require("../utils/slashCommands");
 const { enabled247 } = require("../utils/State");
 const Database = require("../database/Database");
 const config = require("../config");
-const path = require("path");
-const fs = require("fs");
 
 // ══════════════════════════════════════════════════════════════════════════════
 // ZEECHEI STREAMING PRESENCE
@@ -118,18 +116,18 @@ async function reconnect247Guilds(client) {
 
       enabled247.add(guildId);
 
-      const player = client.lavalink.createPlayer({
+      if (client.poru.players.has(guildId)) continue;
+
+      client.poru.createConnection({
         guildId,
-        voiceChannelId,
-        textChannelId:
+        voiceChannel: voiceChannelId,
+        textChannel:
           textChannelId || voiceChannelId,
 
-        selfDeaf: true,
-        selfMute: false,
-        volume: 80,
+        deaf: true,
+        mute: false,
       });
 
-      await player.connect();
 
       const textCh = textChannelId
         ? guild.channels.cache.get(textChannelId)
@@ -211,46 +209,20 @@ module.exports = {
     // LAVALINK
     // ══════════════════════════════════════════════════════════════════════════
 
-    if (!config.lavalinkConfigured) {
-      console.warn(
-        "[Lavalink] LAVALINK_HOST / LAVALINK_PASSWORD belum diisi — fitur musik nonaktif, command lain tetap jalan."
-      );
-    } else {
-      try {
-        const manager = createManager(client);
-
-        client.lavalink = manager;
-
-        manager.nodeManager.once(
-          "connect",
-          () => {
-            setTimeout(() => {
-              reconnect247Guilds(client);
-            }, 3_000);
-          }
-        );
-
-        await manager.init(client.user.id);
-
-        console.log(
-          "[Lavalink] Manager initialized."
-        );
-      } catch (error) {
-        console.error(
-          "[Lavalink] Init failed (bot tetap jalan tanpa musik):",
-          error?.message || error
-        );
-      }
-    }
-
-    // ──────────────────────────────────────────────────────────────────────
-    // LEO / ZEECHEI MUSIC ENGINE (Poru)
-    // This is additive: Zeechei's existing Lavalink manager remains available
-    // to the rest of the bot, while commands/music uses the imported engine.
-    // ──────────────────────────────────────────────────────────────────────
+    // commands/music uses Poru. A second manager consumes the same credential
+    // and makes the gateway reject one connection with HTTP 409.
     try {
       const { initPoruMusic } = require("../music/PoruEngine");
-      await initPoruMusic(client);
+      const poru = await initPoruMusic(client);
+      if (poru) {
+        poru.once("nodeConnect", () => {
+          setTimeout(() => {
+            void reconnect247Guilds(client).catch(() =>
+              console.error("[247] Could not restore saved voice connections.")
+            );
+          }, 3_000);
+        });
+      }
     } catch (error) {
       console.error("[LEO Music] Initialization failed:", error?.message || error);
     }
@@ -260,62 +232,13 @@ module.exports = {
     // ══════════════════════════════════════════════════════════════════════════
 
     try {
-      const slashData = [];
-
-      const categoriesPath =
-        path.join(__dirname, "../commands");
-
-      for (
-        const category of fs
-          .readdirSync(categoriesPath)
-      ) {
-        const categoryPath =
-          path.join(
-            categoriesPath,
-            category
-          );
-
-        if (
-          !fs
-            .statSync(categoryPath)
-            .isDirectory()
-        ) {
-          continue;
-        }
-
-        const files =
-          fs
-            .readdirSync(categoryPath)
-            .filter(file =>
-              file.endsWith(".js")
-            );
-
-        for (const file of files) {
-          try {
-            const command =
-              require(
-                path.join(
-                  categoryPath,
-                  file
-                )
-              );
-
-            if (
-              command.data &&
-              typeof command.data.toJSON ===
-                "function"
-            ) {
-              slashData.push(
-                command.data.toJSON()
-              );
-            }
-          } catch (err) {
-            console.error(
-              `[Slash] Failed loading ${category}/${file}:`,
-              err.message
-            );
-          }
-        }
+      // Reuse the validated command registry instead of executing every file
+      // again. Discord allows 100 global chat-input commands.
+      const { commands: slashData, omitted } = selectSlashCommands(client.commands);
+      if (omitted.length) {
+        console.warn(
+          `[Slash] ${omitted.length} commands remain prefix-only: ${omitted.join(", ")}`
+        );
       }
 
       const rest = new REST({
